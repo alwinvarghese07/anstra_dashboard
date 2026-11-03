@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TreePine, Lock, User, ArrowRight, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, ArrowRight, ShieldCheck, Check } from "lucide-react";
 import asntraLogo from "../../../assets/asntra-logo.png";
 import asntraMark from "../../../assets/asntra-mark.png";
 
@@ -10,216 +10,306 @@ export function LoginScreen({
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Administrator");
+  const [showPassword, setShowPassword] = useState(false);
+  const [capsLockActive, setCapsLockActive] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
-  const ROLES = [
-    "Administrator",
-    "Field Director",
-    "Deputy Director",
-    "DFO",
-    "Range Officer",
-    "Staff",
-  ];
+  // Check Caps Lock on key events
+  function handleKeyEvent(e: React.KeyboardEvent) {
+    if (typeof e.getModifierState === "function") {
+      setCapsLockActive(e.getModifierState("CapsLock"));
+    }
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!username.trim() || !password.trim()) {
-      setError("Please enter both username and password.");
+    setError("");
+
+    if (!username.trim()) {
+      setError("Please enter your Employee ID or Username.");
       return;
     }
-    onLogin(role, username.trim());
+    if (!password.trim()) {
+      setError("Please enter your password.");
+      return;
+    }
+    if (password.trim().length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
+    // Role detection based on input or default to Administrator
+    let role = "Administrator";
+    const lower = username.toLowerCase();
+    if (lower.includes("director") || lower.includes("field")) {
+      role = "Field Director";
+    } else if (lower.includes("dfo")) {
+      role = "DFO";
+    } else if (lower.includes("range") || lower.includes("officer")) {
+      role = "Range Officer";
+    } else if (lower.includes("staff") || lower.includes("guard")) {
+      role = "Staff";
+    }
+
+    const displayName = username.includes("-") || username.length < 5
+      ? "Dr. Arjun Kulkarni"
+      : username.trim();
+
+    onLogin(role, displayName);
   }
 
-  function handleDemoQuickLogin(selectedRole: string, defaultName: string) {
-    setRole(selectedRole);
-    setUsername(defaultName);
+  function handleQuickLogin(role: string, name: string) {
+    setUsername(name);
     setPassword("password123");
-    onLogin(selectedRole, defaultName);
+    onLogin(role, name);
   }
 
   return (
-    <div className="min-h-screen flex bg-white font-sans text-foreground">
-      {/* Left: Brand Identity & Reserve Telemetry */}
-      <div className="hidden lg:flex lg:w-[52%] relative flex-col justify-between bg-[#103327] text-white p-12 overflow-hidden">
-        {/* Subtle photo background with deep green overlay */}
-        <img
-          src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=1400&h=1000&fit=crop&auto=format"
-          alt="Nagarahole Tiger Reserve Forest"
-          className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B251C] via-[#103327]/90 to-[#103327]/85" />
+    <div className="min-h-screen w-full bg-[#E5E9E6]/60 p-3 sm:p-5 lg:p-7 flex items-center justify-center font-sans antialiased">
+      {/* ─── Main Split Frame (Exact match to reference design) ─── */}
+      <div className="w-full max-w-[1360px] min-h-[720px] lg:h-[840px] bg-white rounded-3xl sm:rounded-4xl shadow-xl overflow-hidden flex flex-col lg:flex-row border border-[#E5E9E6]">
+        
+        {/* ─── Left Panel: Majestic Forest Visual & Typography ─── */}
+        <div className="lg:w-[50%] p-6 sm:p-8 lg:p-12 relative flex flex-col justify-between overflow-hidden bg-[#0A1A14]">
+          {/* High-res pristine misty forest imagery */}
+          <img
+            src="https://images.unsplash.com/photo-1511497584788-87676104235f?q=80&w=1600&auto=format&fit=crop"
+            alt="Nagarahole Forest Canopy"
+            className="absolute inset-0 w-full h-full object-cover object-center scale-105"
+          />
 
-        {/* Brand Top Header */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="h-11 px-3 py-1.5 rounded-xl bg-white/95 border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
-            <img src={asntraLogo} alt="ASNTRA — Know All Ws." className="h-7 object-contain" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                v2.1 Enterprise
-              </span>
-            </div>
-            <p className="text-xs text-[#A3B8AD] mt-0.5">Forest Inventory & Operations Platform</p>
-          </div>
-        </div>
+          {/* Deep cinematic gradient overlay matching reference mood */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05110D] via-[#05110D]/40 to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
 
-        {/* Center Mission Statement */}
-        <div className="relative z-10 max-w-lg">
-          <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-semibold block mb-2">
-            Nagarahole Tiger Reserve · NSTR
-          </span>
-          <h1 className="text-4xl font-semibold tracking-tight leading-tight text-white mb-4">
-            Unified forest governance, wildlife protection, and resource inventory.
-          </h1>
-          <p className="text-sm text-[#D3E0D8] leading-relaxed mb-8">
-            An integrated management information system for continuous field reconnaissance,
-            asset custody, GIS layers, and multi-range operational command.
-          </p>
-
-          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/10">
-            <div>
-              <p className="text-2xl font-bold font-mono text-white">847.26</p>
-              <p className="text-xs text-[#A3B8AD] mt-0.5">sq km core zone</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold font-mono text-white">170+</p>
-              <p className="text-xs text-[#A3B8AD] mt-0.5">tigers recorded</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold font-mono text-white">34</p>
-              <p className="text-xs text-[#A3B8AD] mt-0.5">monitored beats</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer accreditation */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-[#A3B8AD] pt-6 border-t border-white/10">
-          <span>Karnataka Forest Department · Government of Karnataka</span>
-          <span className="flex items-center gap-1">
-            <ShieldCheck size={14} className="text-emerald-400" />
-            NTCA Verified Node
-          </span>
-        </div>
-      </div>
-
-      {/* Right: Modern Stripe-style Clean Sign-In Form */}
-      <div className="flex-1 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-white">
-        <div className="flex justify-end items-center">
-          <span className="text-xs text-muted-foreground">
-            Support: <a href="mailto:support@anstra.gov.in" className="text-[#174B3A] hover:underline font-medium">it-support@anstra.gov.in</a>
-          </span>
-        </div>
-
-        <div className="w-full max-w-sm mx-auto my-auto">
-          {/* Brand Logo Header */}
-          <div className="flex items-center gap-2 mb-6">
-            <img src={asntraLogo} alt="ASNTRA — Know All Ws." className="h-9 object-contain" />
+          {/* Top Eyebrow Tag matching reference "A WISE QUOTE" */}
+          <div className="relative z-10 flex items-center gap-3">
+            <span className="text-xs font-mono tracking-widest text-emerald-300 font-semibold uppercase">
+              A WISE QUOTE
+            </span>
+            <div className="h-px w-14 bg-emerald-300/40" />
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-foreground tracking-tight">Sign in to ASNTRA</h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Select your administrative role and enter your portal credentials
+          {/* Bottom Headline & Quote matching reference */}
+          <div className="relative z-10 mt-36 lg:mt-0 max-w-lg">
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.08]">
+              Conserve<br />
+              Every Acre of<br />
+              The Wild
+            </h1>
+            <p className="text-sm text-emerald-100/90 leading-relaxed max-w-md mt-5 font-normal drop-shadow-sm">
+              &ldquo;The clearest way into the universe is through a forest wilderness. Protect every beat, empower every watcher, know all Ws.&rdquo;
             </p>
+
+            {/* Subtle bottom badge */}
+            <div className="flex items-center gap-2 pt-6 mt-6 border-t border-white/15 text-xs text-emerald-200/80">
+              <ShieldCheck size={15} className="text-emerald-400 shrink-0" />
+              <span>Nagarahole State Tiger Reserve · Karnataka Forest Department</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── Right Panel: Clean White Sign-In Form ─── */}
+        <div className="lg:w-[50%] p-8 sm:p-12 lg:p-16 flex flex-col justify-between bg-white overflow-y-auto">
+          {/* Top Header Logo */}
+          <div className="flex items-center justify-center gap-2.5">
+            <img src={asntraLogo} alt="ASNTRA" className="h-7 object-contain" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-semibold text-foreground mb-1.5 uppercase tracking-wider">
-                Authorized Role
-              </label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full px-3 py-2 text-xs bg-white border border-border rounded-lg text-foreground focus:outline-none focus:border-[#174B3A] focus:ring-1 focus:ring-[#174B3A]/20 transition-all cursor-pointer"
-              >
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
+          {/* Center Content Form */}
+          <div className="w-full max-w-sm mx-auto my-auto py-6">
+            {/* Title & Subtitle matching reference */}
+            <div className="text-center mb-8">
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#101828]">
+                Welcome Back
+              </h2>
+              <p className="text-xs text-[#667085] mt-2">
+                Enter your employee id and password to access your account
+              </p>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-foreground mb-1.5 uppercase tracking-wider">
-                Officer ID / Username
-              </label>
-              <div className="relative">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Field 1: Employee ID / Username */}
+              <div>
+                <label className="block text-xs font-semibold text-[#344054] mb-1.5">
+                  Employee ID / Username
+                </label>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. arjun.kulkarni or NSTR-001"
-                  className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-border rounded-lg text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-[#174B3A] focus:ring-1 focus:ring-[#174B3A]/20 transition-all"
+                  onKeyDown={handleKeyEvent}
+                  onKeyUp={handleKeyEvent}
+                  placeholder="e.g. NSTR-001 or arjun.kulkarni"
+                  className="w-full px-4 py-3 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-sm text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
                 />
-                <User size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-foreground mb-1.5 uppercase tracking-wider">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter secure password"
-                  className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-border rounded-lg text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-[#174B3A] focus:ring-1 focus:ring-[#174B3A]/20 transition-all"
-                />
-                <Lock size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              {/* Field 2: Password with visibility toggle & caps lock detection */}
+              <div>
+                <label className="block text-xs font-semibold text-[#344054] mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyEvent}
+                    onKeyUp={handleKeyEvent}
+                    placeholder="Enter your password"
+                    className="w-full pl-4 pr-11 py-3 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-sm text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#667085] hover:text-[#101828] p-1 transition-colors cursor-pointer"
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+
+                {/* Caps Lock Alert */}
+                {capsLockActive && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 mt-1.5 animate-in fade-in duration-100">
+                    <AlertCircle size={12} className="shrink-0" />
+                    <span>Caps Lock is ON</span>
+                  </div>
+                )}
               </div>
-            </div>
 
-            {error && (
-              <div className="p-2.5 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-800">
-                {error}
-              </div>
-            )}
+              {/* Options Row: Remember me & Forgot Password */}
+              <div className="flex items-center justify-between text-xs pt-1">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-[#475467] hover:text-[#101828]">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-[#D0D5DD] text-[#101828] focus:ring-[#101828] cursor-pointer accent-[#101828]"
+                  />
+                  <span>Remember me</span>
+                </label>
 
-            <button
-              type="submit"
-              className="w-full py-2.5 px-4 rounded-lg bg-[#174B3A] text-white text-xs font-semibold hover:bg-[#123C2E] transition-all cursor-pointer shadow-xs active:scale-[0.99] flex items-center justify-center gap-1.5 mt-2"
-            >
-              <span>Sign In to Command Portal</span>
-              <ArrowRight size={13} />
-            </button>
-          </form>
-
-          {/* Quick Demo Access Bar */}
-          <div className="mt-6 pt-5 border-t border-border">
-            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
-              Quick Role Switching (Demo)
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                { r: "Administrator", name: "Dr. Arjun Kulkarni" },
-                { r: "Field Director", name: "Dr. Arjun Kulkarni" },
-                { r: "Range Officer", name: "Smt. Kavitha Rao" },
-                { r: "Staff", name: "M.N. Siddaraju" },
-              ].map((item) => (
                 <button
-                  key={item.r}
                   type="button"
-                  onClick={() => handleDemoQuickLogin(item.r, item.name)}
-                  className="px-2 py-1 text-[11px] rounded bg-[#F7F9F7] hover:bg-[#EBF3EE] hover:text-[#174B3A] border border-border text-muted-foreground transition-colors cursor-pointer"
+                  onClick={() => setShowForgotModal(true)}
+                  className="font-medium text-[#475467] hover:text-[#101828] hover:underline cursor-pointer transition-colors"
                 >
-                  {item.r}
+                  Forgot Password
                 </button>
-              ))}
+              </div>
+
+              {/* Error Alert */}
+              {error && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2 animate-in fade-in duration-150">
+                  <AlertCircle size={14} className="shrink-0 text-red-600" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {/* Primary Action Button: Sign In (matching reference) */}
+              <button
+                type="submit"
+                className="w-full py-3 px-4 rounded-xl bg-[#101828] hover:bg-black text-white text-sm font-semibold transition-all shadow-sm active:scale-[0.99] cursor-pointer mt-2"
+              >
+                Sign In
+              </button>
+
+              {/* Secondary Action: Sign In with Google (matching reference) */}
+              <button
+                type="button"
+                onClick={() => handleQuickLogin("Administrator", "Dr. Arjun Kulkarni")}
+                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-[#F8F9FA] border border-[#E5E9E6] text-xs font-semibold text-[#344054] hover:text-[#101828] transition-all shadow-2xs flex items-center justify-center gap-2.5 cursor-pointer mt-2"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+                <span>Sign In with Google</span>
+              </button>
+            </form>
+
+            {/* Quick Demo Credentials shortcut */}
+            <div className="mt-6 pt-4 border-t border-[#F2F4F7]">
+              <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider block mb-2 text-center">
+                Quick One-Click Demo Access
+              </span>
+              <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                {[
+                  { r: "Administrator", name: "Dr. Arjun Kulkarni" },
+                  { r: "Field Director", name: "Dr. Arjun Kulkarni" },
+                  { r: "Range Officer", name: "Smt. Kavitha Rao" },
+                ].map((demo) => (
+                  <button
+                    key={demo.r}
+                    type="button"
+                    onClick={() => handleQuickLogin(demo.r, demo.name)}
+                    className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#F8F9FA] hover:bg-[#EBF3EE] hover:text-[#174B3A] border border-[#E5E9E6] text-[#475467] transition-colors cursor-pointer"
+                  >
+                    {demo.r}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="text-center text-xs text-muted-foreground">
-          Protected by Government PKI & Role-Based Access Control · NSTR MIS 2026
+          {/* Bottom Footer matching reference "Don't have an account? Sign Up" */}
+          <div className="text-center text-xs text-[#667085] pt-4">
+            Don&apos;t have an account?{" "}
+            <button
+              type="button"
+              onClick={() => alert("Please contact your Range Forest Officer or Central IT Division (helpdesk@nstr.gov.in) to provision an employee account.")}
+              className="font-semibold text-[#101828] hover:underline cursor-pointer"
+            >
+              Sign Up
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* ─── Forgot Password Modal ─── */}
+      {showForgotModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-[#E5E9E6] space-y-4">
+            <div className="w-10 h-10 rounded-full bg-[#EBF3EE] text-[#174B3A] flex items-center justify-center">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[#101828]">Password Recovery Protocol</h3>
+              <p className="text-xs text-[#475467] mt-1.5 leading-relaxed">
+                For administrative and anti-poaching security, passwords can only be reset by your Range Forest Officer or the Central IT Helpdesk.
+              </p>
+            </div>
+            <div className="p-3 bg-[#F8F9FA] rounded-xl border border-[#E5E9E6] text-xs text-[#344054] space-y-1">
+              <p><strong className="text-[#101828]">Helpdesk:</strong> it-support@nstr.gov.in</p>
+              <p><strong className="text-[#101828]">Nagarahole Control Room:</strong> +91 821-2480001</p>
+            </div>
+            <button
+              onClick={() => setShowForgotModal(false)}
+              className="w-full py-2.5 px-4 bg-[#101828] hover:bg-black text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

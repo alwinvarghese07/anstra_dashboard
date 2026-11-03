@@ -2645,7 +2645,7 @@ function ContentRouter({ view }: { view: string }) {
 // ─── Main Application Root ────────────────────────────────────────────────────
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeView, setActiveView] = useState("dash-admin");
   const [userRole, setUserRole] = useState("Administrator");
   const [userName, setUserName] = useState("Dr. Arjun Kulkarni");
