@@ -1,0 +1,10 @@
+{
+  "description": "Streamline forest management with a comprehensive portal for tracking wildlife, managing resources, and facilitating tourism, enhancing operational efficiency.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
