@@ -79,28 +79,28 @@ export function LoginScreen({
       </div>
 
       {/* ─── Right Panel: Clean White Sign-In Form ─── */}
-      <div className="lg:w-1/2 min-h-screen p-8 sm:p-12 lg:p-16 xl:p-24 flex flex-col justify-between bg-white overflow-y-auto">
+      <div className="lg:w-1/2 min-h-screen p-8 sm:p-12 lg:p-16 xl:p-20 flex flex-col justify-between bg-white overflow-y-auto">
         {/* Top Header Logo */}
         <div className="flex items-center justify-center">
-          <img src={asntraLogo} alt="ASNTRA" className="h-8 object-contain" />
+          <img src={asntraLogo} alt="ASNTRA" className="h-9 sm:h-10 object-contain" />
         </div>
 
         {/* Center Content Form */}
-        <div className="w-full max-w-sm mx-auto my-auto py-8">
+        <div className="w-full max-w-[440px] mx-auto my-auto py-8">
           {/* Title & Subtitle */}
-          <div className="text-center mb-8">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#101828]">
+          <div className="text-center mb-9">
+            <h2 className="font-serif text-4xl sm:text-[44px] font-bold tracking-tight text-[#101828] leading-tight">
               Welcome Back
             </h2>
-            <p className="text-xs text-[#667085] mt-2">
+            <p className="text-sm text-[#667085] mt-3">
               Enter your employee id and password to access your account
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Field 1: Employee ID / Username */}
             <div>
-              <label className="block text-xs font-semibold text-[#344054] mb-1.5">
+              <label className="block text-sm font-semibold text-[#344054] mb-2">
                 Employee ID / Username
               </label>
               <input
@@ -110,13 +110,13 @@ export function LoginScreen({
                 onKeyDown={handleKeyEvent}
                 onKeyUp={handleKeyEvent}
                 placeholder="Enter your employee ID or username"
-                className="w-full px-4 py-3 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-sm text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
+                className="w-full px-4.5 py-3.5 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-base text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
               />
             </div>
 
             {/* Field 2: Password with visibility toggle & caps lock detection */}
             <div>
-              <label className="block text-xs font-semibold text-[#344054] mb-1.5">
+              <label className="block text-sm font-semibold text-[#344054] mb-2">
                 Password
               </label>
               <div className="relative">
@@ -127,35 +127,35 @@ export function LoginScreen({
                   onKeyDown={handleKeyEvent}
                   onKeyUp={handleKeyEvent}
                   placeholder="Enter your password"
-                  className="w-full pl-4 pr-11 py-3 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-sm text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
+                  className="w-full pl-4.5 pr-12 py-3.5 bg-[#F8F9FA] hover:bg-[#F2F4F7] focus:bg-white border border-[#E5E9E6] focus:border-[#101828] rounded-xl text-base text-[#101828] placeholder:text-[#98A2B3] transition-all focus:outline-none focus:ring-2 focus:ring-[#101828]/10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#667085] hover:text-[#101828] p-1 transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#667085] hover:text-[#101828] p-1.5 transition-colors cursor-pointer"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
 
               {/* Caps Lock Alert */}
               {capsLockActive && (
-                <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 mt-1.5 animate-in fade-in duration-100">
-                  <AlertCircle size={12} className="shrink-0" />
+                <div className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-md border border-amber-200 mt-2 animate-in fade-in duration-100">
+                  <AlertCircle size={14} className="shrink-0" />
                   <span>Caps Lock is ON</span>
                 </div>
               )}
             </div>
 
             {/* Options Row: Remember me & Forgot Password */}
-            <div className="flex items-center justify-between text-xs pt-1">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-[#475467] hover:text-[#101828]">
+            <div className="flex items-center justify-between text-sm pt-1">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-[#475467] hover:text-[#101828]">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-[#D0D5DD] text-[#101828] focus:ring-[#101828] cursor-pointer accent-[#101828]"
+                  className="w-4.5 h-4.5 rounded border-[#D0D5DD] text-[#101828] focus:ring-[#101828] cursor-pointer accent-[#101828]"
                 />
                 <span>Remember me</span>
               </label>
@@ -171,8 +171,8 @@ export function LoginScreen({
 
             {/* Error Alert */}
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2 animate-in fade-in duration-150">
-                <AlertCircle size={14} className="shrink-0 text-red-600" />
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 flex items-center gap-2 animate-in fade-in duration-150">
+                <AlertCircle size={16} className="shrink-0 text-red-600" />
                 <span>{error}</span>
               </div>
             )}
@@ -180,7 +180,7 @@ export function LoginScreen({
             {/* Primary Action Button: Sign In */}
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-xl bg-[#101828] hover:bg-black text-white text-sm font-semibold transition-all shadow-sm active:scale-[0.99] cursor-pointer mt-2"
+              className="w-full py-3.5 px-4 rounded-xl bg-[#101828] hover:bg-black text-white text-base font-semibold transition-all shadow-sm active:scale-[0.99] cursor-pointer mt-3"
             >
               Sign In
             </button>
@@ -189,9 +189,9 @@ export function LoginScreen({
             <button
               type="button"
               onClick={() => handleQuickLogin("Administrator", "Dr. Arjun Kulkarni")}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-[#F8F9FA] border border-[#E5E9E6] text-xs font-semibold text-[#344054] hover:text-[#101828] transition-all shadow-2xs flex items-center justify-center gap-2.5 cursor-pointer mt-2"
+              className="w-full py-3 px-4 rounded-xl bg-white hover:bg-[#F8F9FA] border border-[#E5E9E6] text-sm font-semibold text-[#344054] hover:text-[#101828] transition-all shadow-2xs flex items-center justify-center gap-3 cursor-pointer mt-3"
             >
-              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -212,33 +212,10 @@ export function LoginScreen({
               <span>Sign In with Google</span>
             </button>
           </form>
-
-          {/* Quick Demo Credentials shortcut */}
-          <div className="mt-6 pt-4 border-t border-[#F2F4F7]">
-            <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider block mb-2 text-center">
-              Quick One-Click Demo Access
-            </span>
-            <div className="flex items-center justify-center gap-1.5 flex-wrap">
-              {[
-                { r: "Administrator", name: "Dr. Arjun Kulkarni" },
-                { r: "Field Director", name: "Dr. Arjun Kulkarni" },
-                { r: "Range Officer", name: "Smt. Kavitha Rao" },
-              ].map((demo) => (
-                <button
-                  key={demo.r}
-                  type="button"
-                  onClick={() => handleQuickLogin(demo.r, demo.name)}
-                  className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-[#F8F9FA] hover:bg-[#EBF3EE] hover:text-[#174B3A] border border-[#E5E9E6] text-[#475467] transition-colors cursor-pointer"
-                >
-                  {demo.r}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Bottom Footer */}
-        <div className="text-center text-xs text-[#667085] pt-4">
+        <div className="text-center text-sm text-[#667085] pt-6">
           Don&apos;t have an account?{" "}
           <button
             type="button"
