@@ -22,7 +22,7 @@ export default defineConfig(async (env) =>
         replacement,
       })),
     },
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
+    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : './',
     build: {
       sourcemap: env.mode === 'development' ? 'inline' : false,
       minify: env.mode !== 'development',
